@@ -8,6 +8,10 @@ import {
   Post,
   Param,
   Body,
+  HttpException,
+  HttpStatus,
+  ForbiddenException,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 @Controller('cats')
@@ -16,16 +20,30 @@ export class CatsController {
 
   @Post()
   async create(@Body() createCatDto: CreateCatDto) {
-    this.catsService.create(createCatDto);
+    throw new ForbiddenException();
+    // this.catsService.create(createCatDto);
   }
 
   @Get()
   async findAll(): Promise<any[]> {
-    return [];
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        error: 'This is a custom message',
+      },
+      HttpStatus.FORBIDDEN,
+    );
+    // return this.catsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id): string {
-    return `This action returns a #${id} cat`;
+  async findOne(
+    @Param( 
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return this.catsService.findOne(id);
   }
 }
