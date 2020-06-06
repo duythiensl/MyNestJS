@@ -1,5 +1,4 @@
 import { HttpExceptionFilter } from './common/exception/http-exception.filter';
-
 import { Module,NestModule,MiddlewareConsumer,RequestMethod  } from '@nestjs/common';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { CatsModule } from './cats/cats.module';
