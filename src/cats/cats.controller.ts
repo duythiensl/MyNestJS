@@ -1,3 +1,6 @@
+import { ValidationPipe } from './../common/piple/validation.pipe';
+import { JoiValidationPipe } from '../common/piple/joi-alidation.pipe ';
+import { ParseIntPipe } from '../common/piple/parse-int.pipe';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 import {
@@ -11,7 +14,7 @@ import {
   HttpException,
   HttpStatus,
   ForbiddenException,
-  ParseIntPipe,
+  UsePipes,
 } from '@nestjs/common';
 
 @Controller('cats')
@@ -20,8 +23,8 @@ export class CatsController {
 
   @Post()
   async create(@Body() createCatDto: CreateCatDto) {
-    throw new ForbiddenException();
-    // this.catsService.create(createCatDto);
+    // throw new ForbiddenException();
+    this.catsService.create(createCatDto);
   }
 
   @Get()
@@ -37,13 +40,7 @@ export class CatsController {
   }
 
   @Get(':id')
-  async findOne(
-    @Param( 
-      'id',
-      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
-    )
-    id: number,
-  ) {
+  async findOne(@Param('id', new ParseIntPipe()) id) {
     return this.catsService.findOne(id);
   }
 }
